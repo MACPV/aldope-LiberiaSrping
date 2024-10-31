@@ -20,7 +20,8 @@ public class AutorServicio {
     @Transactional
     public void crearAutor(
             String name
-    ) {
+    ) throws MiException {
+        validar(name);
         Autor autor = new Autor();
         autor.setName(name);
 
@@ -28,7 +29,7 @@ public class AutorServicio {
     }
 
     @Transactional(readOnly = true)
-    public List<Autor> listarAutor(){
+    public List<Autor> listarAutor() {
         List<Autor> autors = new ArrayList<>();
 
         autors = autorRepositorio.findAll();
@@ -38,14 +39,23 @@ public class AutorServicio {
     }
 
     @Transactional
-    public void modificaAutor(String name, String id){
-
+    public void modificaAutor(String name, String id) throws MiException {
+        validar(name);
         Optional<Autor> autorOptional = autorRepositorio.findById(id);
 
-        if(autorOptional.isPresent()){
+        if (autorOptional.isPresent()) {
+
             Autor autor = autorOptional.get();
             autor.setName(name);
             autorRepositorio.save(autor);
         }
+    }
+
+
+    public void validar(String name) throws MiException {
+        if (name == null || name.isEmpty()) {
+            throw new MiException("El nomnbre no puede ser nulo o vacío");
+        }
+
     }
 }
