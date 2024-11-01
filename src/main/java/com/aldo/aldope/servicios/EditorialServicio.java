@@ -30,11 +30,8 @@ public class EditorialServicio {
 
     @Transactional(readOnly = true)
     public List<Editorial> listarEditorail() {
-        List<Editorial> editorials = new ArrayList<>();
 
-        editorials = editorialRepositorio.findAll();
-
-        return editorials;
+        return editorialRepositorio.findAll();
 
     }
 

@@ -21,7 +21,9 @@ public class LibroServicio {
 
     @Autowired
     private LibroRepositorio libroRepositorio;
+    @Autowired
     private AutorRepositorio autorRepositorio;
+    @Autowired
     private EditorialRepositorio editorialRepositorio;
 
     @Transactional

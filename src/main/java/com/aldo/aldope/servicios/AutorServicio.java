@@ -30,11 +30,8 @@ public class AutorServicio {
 
     @Transactional(readOnly = true)
     public List<Autor> listarAutor() {
-        List<Autor> autors = new ArrayList<>();
 
-        autors = autorRepositorio.findAll();
-
-        return autors;
+        return autorRepositorio.findAll();
 
     }
 
