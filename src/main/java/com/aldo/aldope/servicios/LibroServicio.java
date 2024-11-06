@@ -65,6 +65,7 @@ public class LibroServicio {
             String idAutor,
             String idEditorial
     ) throws MiException {
+
         validar(titulo, ejemplares, idAutor, idEditorial);
         Optional<Editorial> optionalEditorial = editorialRepositorio.findById(idEditorial);
         Optional<Autor> autorOptional = autorRepositorio.findById(idAutor);
@@ -99,6 +100,7 @@ public class LibroServicio {
             String idAutor,
             String idEditorial
     ) throws MiException {
+
         if (titulo == null || titulo.isEmpty()) {
             throw new MiException("El titulo no puede ser nulo o vacío");
         }
@@ -112,5 +114,10 @@ public class LibroServicio {
             throw new MiException("El nombre de editorial no puede ser nulo o vacío");
         }
 
+    }
+
+    @Transactional(readOnly = true)
+    public Libro getOne(Long isbn) {
+        return libroRepositorio.getReferenceById(isbn);
     }
 }

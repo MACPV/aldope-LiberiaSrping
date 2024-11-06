@@ -55,4 +55,8 @@ public class AutorServicio {
         }
 
     }
+    @Transactional(readOnly = true)
+    public Autor getOne(String id){
+        return autorRepositorio.getReferenceById(id);
+    }
 }

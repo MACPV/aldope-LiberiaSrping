@@ -2,18 +2,19 @@ package com.aldo.aldope.controladores;
 
 import com.aldo.aldope.entidades.Autor;
 import com.aldo.aldope.entidades.Editorial;
+import com.aldo.aldope.entidades.Libro;
 import com.aldo.aldope.excepciones.MiException;
 import com.aldo.aldope.servicios.AutorServicio;
 import com.aldo.aldope.servicios.EditorialServicio;
 import com.aldo.aldope.servicios.LibroServicio;
+
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/libro")
@@ -76,4 +77,49 @@ public class LibroControlador {
             return "libro_form.html";
         }
     }
+
+    @GetMapping("/lista")
+    public String listar(ModelMap modelMap) {
+        List<Libro> libros = libroServicio.listarLibros();
+        modelMap.addAttribute("libros", libros);
+        return "libro_list.html";
+    }
+
+    @GetMapping("/modificar/{isbn}")
+    public String modificar(@PathVariable Long isbn, ModelMap modelMap) {
+
+        Libro libro = libroServicio.getOne(isbn);
+        Editorial editorial = libro.getEditorial();
+        Autor autor = libro.getAutor();
+
+        modelMap.put("libro", libro);
+        modelMap.put("editorial", editorial);
+        modelMap.put("autor", autor);
+
+        modelMap.put("autores", autorServicio.listarAutor());
+        modelMap.put("editoriales", editorialServicio.listarEditorail());
+
+        return "libro_modificar.html";
+
+    }
+
+    @PostMapping("/modificar/{isbn}")
+    public String modificar(@PathVariable Long isbn,
+                             String titulo,
+                             Integer ejemplares,
+                             String idAutor,
+                             String idEditorial,
+                            ModelMap modelMap) {
+        try {
+            libroServicio.modificarLibro(isbn, titulo, ejemplares, idAutor, idEditorial);
+            modelMap.put("exito", "El libro ha sido modificado con éxito.");
+            return "redirect:../lista";
+        } catch (MiException me) {
+            modelMap.put("error", me.getMessage());
+            return "libro_modificar.html";
+
+        }
+
+    }
+
 }

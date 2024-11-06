@@ -55,4 +55,9 @@ public class EditorialServicio {
         }
 
     }
+
+    @Transactional(readOnly = true)
+    public Editorial getOne(String id){
+        return editorialRepositorio.getReferenceById(id);
+    }
 }

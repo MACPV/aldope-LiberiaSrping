@@ -67,36 +67,47 @@
 
         <div class="container-fluid m-5 contenedor">
 
-            <form class="formulario" th:action="@{/libro/registro}" method="POST">
+            <form class="formulario" th:action="@{/libro/modificar/{isbn}(isbn=${libro.isbn})}" method="post">
 
-                <div th:if="${error != null}" class="card text-white bg-danger mb-3 mensajeError" >
+                <!-- Mensaje de Error -->
+                <div th:if="${error != null}" class="card text-white bg-danger mb-3 mensajeError">
                     <div class="card-body">
                         <h5 class="card-title">Error 👎</h5>
                         <p class="card-text" th:text="${error}"></p>
                     </div>
                 </div>
-                <div th:if="${exito != null}" class="card text-white bg-success mb-3 mt-3 mensajeExito" >
+
+                <!-- Mensaje de Éxito -->
+                <div th:if="${exito != null}" class="card text-white bg-success mb-3 mt-3 mensajeExito">
                     <div class="card-body">
-                        <h5 class="card-title">Exito!</h5>
+                        <h5 class="card-title">¡Éxito!</h5>
                         <p class="card-text" th:text="${exito}"></p>
                     </div>
                 </div>
 
+                <!-- Campo ISBN -->
                 <div class="form-group my-3">
-                    <label class="mb-2">Cargar Libro</label>
-                    <input type="number" class="form-control" name="isbn" placeholder="ISBN">
-                </div>
-                <div class="form-group my-3">
-                    <input type="text" class="form-control" name="titulo" placeholder="Titulo del Libro">
+                    <label class="mb-2">ISBN</label>
+                    <input type="number" class="form-control" name="isbn" th:value="${libro.isbn}" placeholder="ISBN">
                 </div>
 
+                <!-- Campo Título -->
                 <div class="form-group my-3">
-                    <input type="number" class="form-control" name="ejemplares" placeholder="Cantidad de Ejemplares">
+                    <label class="mb-2">Título del Libro</label>
+                    <input type="text" class="form-control" name="titulo" th:value="${libro.titulo}" placeholder="Título del Libro">
                 </div>
 
+                <!-- Campo Cantidad de Ejemplares -->
                 <div class="form-group my-3">
+                    <label class="mb-2">Cantidad de Ejemplares</label>
+                    <input type="number" class="form-control" name="ejemplares" th:value="${libro.ejemplares}" placeholder="Cantidad de Ejemplares">
+                </div>
+
+                <!-- Selección de Autor -->
+                <div class="form-group my-3" >
+                    <label class="mb-2">Seleccionar Autor</label>
                     <select name="idAutor" class="form-control">
-                        <option value="">Seleccionar Autor</option>
+                        <option th:text="${autor.name}"></option>
                         <option th:each="autor : ${autores}"
                                 th:value="${autor.id}"
                                 th:text="${autor.name}">
@@ -104,9 +115,11 @@
                     </select>
                 </div>
 
-                <div class="form-group my-3">
+                <!-- Selección de Editorial -->
+                <div class="form-group my-3" >
+                    <label class="mb-2">Seleccionar Editorial</label>
                     <select name="idEditorial" class="form-control">
-                        <option value="">Seleccionar Editorial</option>
+                        <option th:text="${editorial.nombre}"></option>
                         <option th:each="editorial : ${editoriales}"
                                 th:value="${editorial.id}"
                                 th:text="${editorial.nombre}">
@@ -114,8 +127,10 @@
                     </select>
                 </div>
 
+                <!-- Botón de Envío -->
                 <button type="submit" class="btn btn-primary mt-3 botones">Guardar</button>
             </form>
+
 
 
             <section class=" text-center container">
