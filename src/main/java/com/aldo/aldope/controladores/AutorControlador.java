@@ -55,6 +55,7 @@ public class AutorControlador {
     public String modificar(@PathVariable String id, String name, ModelMap modelMap) {
         try {
             autorServicio.modificaAutor(name, id);
+            modelMap.put("exito", "Autor Registrado");
             return "redirect:../lista";
         } catch (MiException me) {
             modelMap.put("error", me.getMessage());
