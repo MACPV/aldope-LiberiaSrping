@@ -6,6 +6,11 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navBar">
+    <div class="container">
+        <a th:if="${session.usuariosession.imagen != null}" class="d-flex align-items-center">
+            <img class="logo" th:src="@{/imagen/perfil/__${session.usuariosession.id}__}">
+        </a>
+    </div>
     <div class="containerImg">
         <a href="/" class="navbar-brand d-flex align-items-center">
             <img class="logo" src="/img/Egg.png" alt="Img logo egg">

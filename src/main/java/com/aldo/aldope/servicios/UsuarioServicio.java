@@ -1,8 +1,11 @@
 package com.aldo.aldope.servicios;
 
+import com.aldo.aldope.entidades.Autor;
+import com.aldo.aldope.entidades.Imagen;
 import com.aldo.aldope.entidades.Usuario;
 import com.aldo.aldope.enumeraciones.Rol;
 import com.aldo.aldope.excepciones.MiException;
+import com.aldo.aldope.repositorios.ImagenRepositorio;
 import com.aldo.aldope.repositorios.UsuarioRepositorio;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +33,16 @@ public class UsuarioServicio implements UserDetailsService {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
+    @Autowired
+    private ImagenServicio imagenServicio;
+
     @Transactional
     public void registrar(
             String nombre,
             String email,
             String password,
-            String password2
+            String password2,
+            MultipartFile file
     ) throws MiException {
         validar(nombre, email, password, password2);
         if (!password.equals(password2)) {
@@ -47,8 +55,44 @@ public class UsuarioServicio implements UserDetailsService {
         usuario.setEmail(email);
         usuario.setPassword(new BCryptPasswordEncoder().encode(password));
         usuario.setRol(Rol.USER);
+        Imagen imagen = imagenServicio.guardarImagen(file);
 
+        usuario.setImagen(imagen);
         usuarioRepositorio.save(usuario);
+    }
+
+    @Transactional
+    public void actualizar(
+            String id,
+            String nombre,
+            String email,
+            String password,
+            String password2,
+            MultipartFile file
+    ) throws MiException {
+        validar(nombre, email, password, password2);
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(id);
+        if (usuarioOptional.isPresent()) {
+
+            if (!password.equals(password2)) {
+                throw new MiException("Contraseñas distintas");
+
+            }
+            Usuario usuario = usuarioOptional.get();
+
+            usuario.setNombre(nombre);
+            usuario.setEmail(email);
+            usuario.setPassword(new BCryptPasswordEncoder().encode(password));
+            usuario.setRol(Rol.USER);
+            String idImagen = null;
+            if (usuario.getImagen() != null) {
+                idImagen = usuario.getImagen().getId();
+            }
+
+            Imagen imagen = imagenServicio.actualizarImagen(idImagen, file);
+            usuario.setImagen(imagen);
+            usuarioRepositorio.save(usuario);
+        }
     }
 
     private void validar(String nombre, String email, String password, String password2) throws MiException {
@@ -91,15 +135,15 @@ public class UsuarioServicio implements UserDetailsService {
         return null;
     }
 
-    public List<Usuario> listarUsuarios(){
+    public List<Usuario> listarUsuarios() {
         return usuarioRepositorio.findAll();
     }
 
     @Transactional
-    public void cambiarRol(String id){
+    public void cambiarRol(String id) {
         Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(id);
 
-        if(usuarioOptional.isPresent()){
+        if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
 
             if (usuario.getRol().equals(Rol.USER)) {
@@ -110,5 +154,10 @@ public class UsuarioServicio implements UserDetailsService {
 
             usuarioRepositorio.save(usuario);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Usuario getOne(String id){
+        return usuarioRepositorio.getReferenceById(id);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/")
@@ -36,10 +37,11 @@ public class PortalControlador {
             @RequestParam String email,
             @RequestParam String password,
             @RequestParam String password2,
+            @RequestParam MultipartFile file,
             ModelMap modelMap
     ) {
         try {
-            usuarioServicio.registrar(nombre, email, password, password2);
+            usuarioServicio.registrar(nombre, email, password, password2, file);
             modelMap.put("exito", "registro exitoso");
             return "index.html";
         } catch (MiException me) {
