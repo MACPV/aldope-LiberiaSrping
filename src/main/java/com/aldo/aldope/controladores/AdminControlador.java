@@ -2,6 +2,7 @@ package com.aldo.aldope.controladores;
 
 import com.aldo.aldope.entidades.Usuario;
 import com.aldo.aldope.servicios.UsuarioServicio;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,7 +22,10 @@ public class AdminControlador {
 
 
     @GetMapping("/dashboard")
-    public String panelAdministrativo() {
+    public String panelAdministrativo(HttpSession session) {
+
+        Usuario logueado = (Usuario) session.getAttribute("usuariosession");
+        System.out.println(logueado.getRol());
         return "panel.html";
     }
 

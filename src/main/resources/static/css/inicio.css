@@ -15,8 +15,16 @@
 }
 
 .logo{
-    width: 40%;
-    margin: auto;
+    width: 50%;
+    margin: 1px;
+}
+.logo-user{
+    border-style: solid;
+    border-width: 0.1px;
+    border-color: black;
+    border-radius: 20px;
+    width: 50%;
+    margin: 1px;
 }
 
 .main{
